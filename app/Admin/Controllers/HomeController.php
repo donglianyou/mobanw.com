@@ -17,11 +17,8 @@ class HomeController extends Controller
 
             $content->header('首页');
             $content->description('Version 1.0');
-
-            $content->row(Dashboard::title());
-
+            // $content->row(Dashboard::title());
             $content->row(function (Row $row) {
-
                 $row->column(4, function (Column $column) {
                     $column->append(Dashboard::environment());
                 });
