@@ -16,9 +16,9 @@ class AlterUsersTable extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string("sex")->default("保密")->change();
             $table->string('phone')->unique();
-            $table->string('avatar')->nullable();
+            $table->string('avatar')->nullable()->change();
             $table->integer('scores');
-            $table->string('city')->nullable();
+            $table->string('city')->nullable()->change();
         });
     }
 

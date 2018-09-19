@@ -111,4 +111,14 @@ return [
         'filter_placeholder' => '过滤',
     ],
 
+    'id'            => '编号',
+    'email'         => '邮箱',
+    'sex'           => '性别',
+    'phone'         => '手机号',
+    'city'          => '所在城市',
+    'scores'        => '积分',
+    'sort'          => '排序',
+    'statu'         => '状态',
+    'classname'     => '栏目名称',
+
 ];
