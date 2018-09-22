@@ -38,6 +38,7 @@ return [
 
     'action'            => '操作',
     'title'             => '标题',
+    'keywords'          => '关键词',
     'description'       => '简介',
     'back'              => '返回',
     'back_to_list'      => '返回列表',
@@ -120,5 +121,9 @@ return [
     'sort'          => '排序',
     'statu'         => '状态',
     'classname'     => '栏目名称',
-
+    'parent_id'     => '父类栏目',
+    'order'         => '排序',
+    'logo'          => '图标',
+    'picture'       => '缩略图',
+    'content'       => '内容',
 ];

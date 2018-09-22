@@ -1,13 +1,15 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
+use Encore\Admin\Traits\AdminBuilder;
+use Encore\Admin\Traits\ModelTree;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 
 class Category extends Model
 {
-    use Notifiable;
+    use ModelTree, AdminBuilder;
 
     /**
      * The attributes that are mass assignable.
@@ -15,7 +17,7 @@ class Category extends Model
      * @var array
      */
     protected $fillable = [
-        'name', 'statu', 'sort',
+        'name', 'statu', 'sort', 'parent_id', 'title', 'keywords', 'description', 'images'
     ];
 
     /**

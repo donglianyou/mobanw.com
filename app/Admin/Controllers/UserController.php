@@ -9,6 +9,8 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use Input;
+use Request;
 
 class UserController extends Controller
 {
@@ -90,6 +92,7 @@ class UserController extends Controller
         });
         $grid->phone(trans('admin.phone'));
         $grid->email(trans('admin.email'));
+        $grid->ip('IP地址');
         $grid->created_at(trans('admin.created_at'));
         return $grid;
     }
@@ -112,6 +115,7 @@ class UserController extends Controller
         $show->sex(trans('admin.sex'))->using(['男' => '男', '女' => '女', '保密' => '保密']);
         $show->scores(trans('admin.scores'));
         $show->city(trans('admin.city'));
+        $show->ip(trans('ip地址'));
         $show->created_at(trans('admin.created_at'));
         $show->updated_at(trans('admin.updated_at'));
 
@@ -137,10 +141,12 @@ class UserController extends Controller
         $form->mobile('phone',trans('admin.phone'));
         $form->text('city', trans('admin.city'));
         $form->number('scores', trans('admin.scores'))->default('0')->min(0)->max(1000000);
+        $form->display('ip', trans('IP地址'));
         $form->saving(function (Form $form) {
             if($form->password && $form->model()->password != $form->password){
                 $form->password = bcrypt($form->password);
             }
+            $form->input("ip",request()->getClientIp());
         });
         return $form;
     }

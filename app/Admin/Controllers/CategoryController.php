@@ -2,13 +2,15 @@
 
 namespace App\Admin\Controllers;
 
-use App\Category;
+use App\Models\Category;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
+use Encore\Admin\Facades\Admin;
 use Encore\Admin\Show;
+use Encore\Admin\Tree;
 
 class CategoryController extends Controller
 {
@@ -29,7 +31,7 @@ class CategoryController extends Controller
         return $content
             ->header('栏目分类')
             ->description('文章分类列表')
-            ->body($this->grid());
+            ->body($this->tree());
     }
 
     /**
@@ -79,16 +81,17 @@ class CategoryController extends Controller
     /**
      * Make a grid builder.
      *
-     * @return Grid
+     * @return Tree
      */
-    protected function grid()
+    protected function tree()
     {
-        $grid = new Grid(new Category);
-        $grid->id(trans('admin.id'));
-        $grid->name(trans('admin.name'));
-        $grid->sort(trans('admin.sort'));
-        $grid->statu(trans('admin.statu'))->switch($this->states);
-        return $grid;
+        return Category::tree(function (Tree $tree) {
+            $tree->branch(function ($branch) {
+                $src = config('admin.upload.host') . '/uploads/' . $branch['logo'] ;
+                $logo = "<img src='$src' style='max-width:30px;max-height:30px' class='img'/>";
+                return "{$branch['id']} - <b style='color:#3c8dbc;'>{$branch['name']}</b> &nbsp;&nbsp;&nbsp;&nbsp;$logo";
+            });
+        });
     }
 
     /**
@@ -102,7 +105,10 @@ class CategoryController extends Controller
         $show = new Show(Category::findOrFail($id));
         $show->id(trans('admin.id'));
         $show->name(trans('admin.name'));
-        $show->sort(trans('admin.sort'));
+        $show->title(trans('admin.title'));
+        $show->keywords(trans('admin.keywords'));
+        $show->description(trans('admin.description'));
+        $show->order(trans('admin.order'));
         $show->statu(trans('admin.statu'))->as(function($statu){
             if($statu){
                 return "开启";
@@ -122,15 +128,14 @@ class CategoryController extends Controller
     {
         $form = new Form(new Category);
         $form->display('id',trans('admin.id'));
+        $form->select('parent_id', trans('admin.parent_id'))->options(Category::selectOptions());
         $form->text('name', trans('admin.classname'))->rules('required|min:2|max:10');
-        $form->number('sort', trans('admin.sort'))->default('0')->min(0)->max(1000000);
-        $states = [
-            'on'  => ['value' => 1, 'text' => '打开', 'color' => 'success'],
-            'off' => ['value' => 0, 'text' => '关闭', 'color' => 'danger'],
-        ];
+        $form->image('logo', trans('admin.logo'))->removable();
+        $form->text('title', trans('admin.title'))->rules('required|min:4');
+        $form->text('keywords', trans('admin.keywords'));
+        $form->textarea('description', trans('admin.description'));
+        $form->number('order', trans('admin.order'))->default('0')->min(0)->max(1000000);
         $form->switch('statu', trans('admin.statu'))->states($this->states)->default('1');
-
-
         return $form;
     }
 }
