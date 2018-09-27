@@ -3,12 +3,14 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Article;
+use App\Models\Category;
 use App\Http\Controllers\Controller;
 use Encore\Admin\Controllers\HasResourceActions;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
+use DB;
 
 class ArticleController extends Controller
 {
@@ -82,13 +84,16 @@ class ArticleController extends Controller
         $grid = new Grid(new Article);
         $grid->id(trans('admin.id'));
         $grid->title(trans('admin.title'));
+        $grid->typeid(trans('admin.typeid'))->display(function ($typeid) {
+            $typename = Category::find($typeid)->name;
+            return $typename;
+        });
         $grid->description(trans('admin.description'));
-        $grid->picture(trans('admin.picture'))->image();
-        /* $grid->picture(trans('admin.picture'))->display(function ($picture) {
+        $grid->picture(trans('admin.picture'))->display(function ($picture) {
             if($picture){
                 return "<img src='/uploads/$picture' width='100px'>";
             }
-        }); */
+        });
         $grid->created_at(trans('admin.created_at'));
 
         return $grid;
@@ -118,6 +123,7 @@ class ArticleController extends Controller
     {
         $form = new Form(new Article);
         $form->display('id', trans('admin.id'));
+        $form->select('typeid', trans('admin.typeid'))->options(Category::selectOptions());
         $form->text('title', trans('admin.title'))->rules('required');
         $form->text('keywords', trans('admin.keywords'));
         $form->textarea('description', trans('admin.description'));
@@ -126,7 +132,6 @@ class ArticleController extends Controller
 
         $form->display('created_at', 'Created At');
         $form->display('updated_at', 'Updated At');
-
         return $form;
     }
 }

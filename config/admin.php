@@ -44,6 +44,12 @@ return [
      */
     'secure' => false,
 
+    /* 
+     * must char
+    */
+
+    'must' => '(*) ',
+
     /*
      * Laravel-admin auth setting.
      */
